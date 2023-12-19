@@ -6,6 +6,7 @@ import torch
 import open3d as o3d
 from fusion import TSDFVolumeTorch
 from dataset.tum_rgbd import TUMDataset
+from dataset.kinect_rgbd import KinectDataset
 from tracker import ICPTracker
 from utils import load_config, get_volume_setting, get_time
 
@@ -114,7 +115,10 @@ if __name__ == "__main__":
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     # device = torch.device("cpu")
-    dataset = TUMDataset(os.path.join(args.data_root), device, near=args.near, far=args.far, img_scale=0.25)
+    if args.data_type == 'kinect':
+        dataset = KinectDataset(os.path.join(args.data_root), device, near=args.near, far=args.far, img_scale=0.25)
+    else:
+        dataset = TUMDataset(os.path.join(args.data_root), device, near=args.near, far=args.far, img_scale=0.25)
     vol_dims, vol_origin, voxel_size = get_volume_setting(args)
 
     vis_param.args = args
